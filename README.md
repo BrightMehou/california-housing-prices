@@ -1,13 +1,7 @@
 # Projet de Prédiction des Prix des Logements en Californie
 
 Ce projet est une application de machine learning permettant de prédire les prix des logements en Californie à partir de différentes caractéristiques. Il comprend une API FastAPI, une interface utilisateur Streamlit, et des scripts pour l'entraînement et l'évaluation de modèles de machine learning.
-python = "^3.12"
-fastapi = {extras = ["standard"], version = "^0.115.6"}
-mlflow = "^2.19.0"
-streamlit = "^1.41.1"
-pytest = "^8.3.4"
-scikit-learn = "^1.6.1"
-evidently = "^0.6.5"
+
 ## 🗂️ Structure du Projet
 
 Voici la structure du projet :
@@ -38,8 +32,7 @@ Voici la structure du projet :
 3. **Notebooks Jupyter** :
    - **Analyse_des_features** : Utilisation de SHAP pour analyser l'importance des caractéristiques dans les prédictions.
    - **Analyse_exploratoire** : Exploration des données pour comprendre leur structure et identifier des tendances.
-   - **Experimentations** : Création et évaluation de plusieurs modèles, avec journalisation des résultats dans MLflow pour sélectionner le meilleur modèle.
-   - **data_drift_detection** : Utilisation de Evidently AI pour la détection de drift de données. 
+   - **Experimentations** : Création et évaluation de plusieurs modèles, avec journalisation des résultats dans MLflow pour 
 
 4. **Scripts de Machine Learning** :
    - **train.py** : Industrialise le modèle pour la production en l'enregistrant dans le registre de modèles MLflow.
@@ -104,14 +97,4 @@ Voici la structure du projet :
    ```
 3. Accéder à l'interface UI de mlfow:
    - url : `http://localhost:5000`
-### Tests
-
-1. Exécuter le script d'entraînement :
-   ```bash
-   poetry run python src/ml/train.py
-   ```
-
-2. Exécuter les tests avec Pytest :
-   ```bash
-   poetry run pytest
-   ```
+`
