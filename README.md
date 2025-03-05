@@ -1,7 +1,13 @@
 # Projet de Prédiction des Prix des Logements en Californie
 
 Ce projet est une application de machine learning permettant de prédire les prix des logements en Californie à partir de différentes caractéristiques. Il comprend une API FastAPI, une interface utilisateur Streamlit, et des scripts pour l'entraînement et l'évaluation de modèles de machine learning.
-
+python = "^3.12"
+fastapi = {extras = ["standard"], version = "^0.115.6"}
+mlflow = "^2.19.0"
+streamlit = "^1.41.1"
+pytest = "^8.3.4"
+scikit-learn = "^1.6.1"
+evidently = "^0.6.5"
 ## 🗂️ Structure du Projet
 
 Voici la structure du projet :

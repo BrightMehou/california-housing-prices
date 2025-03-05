@@ -1,9 +1,13 @@
+import logging
 from sklearn.datasets import fetch_california_housing
-
 from evidently.future.datasets import Dataset
 from evidently.future.report import Report
-from evidently.future.metrics import *
 from evidently.future.presets import DataDriftPreset
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
 
 # Charger le dataset California Housing
 data = fetch_california_housing(as_frame=True)
@@ -18,7 +22,8 @@ prod_data['AveOccup'] *= 1.7
 ref = Dataset.from_pandas(train_data)
 curent = Dataset.from_pandas(prod_data)
 report = Report([DataDriftPreset()],include_tests=True)
-
+logger.info("Starting data drift detection...")
 my_eval = report.run(curent, ref)
-
+logger.info("Data drift detection completed.")
 my_eval.save_html("data/data_drift_report.html")
+logger.info("Data drift report saved to data/data_drift_report.html")
