@@ -1,54 +1,99 @@
+import os
 import streamlit as st
 import requests
+import logging
+import plotly.express as px
+from sklearn.datasets import fetch_california_housing
 
-st.markdown("# Prédiction des prix des logements en Californie")
-st.write(
-    "Cette application web prédit le prix d'une maison en Californie en fonction de certaines caractéristiques. "
-    "Veuillez fournir les informations demandées ci-dessous, puis cliquez sur le bouton 'Prédire'."
+# Configuration du logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
+
+# Configuration de la page
+st.set_page_config(page_title="Prédiction du prix des logements", layout="wide")
+
+logger.info("Démarrage de l'application Streamlit.")
+
+# Titre principal
+st.title("🏠 Prédiction du prix des logements en Californie")
+st.markdown("""
+Cette application utilise un modèle de machine learning pour prédire le prix des logements en Californie 
+en fonction de plusieurs caractéristiques socio-démographiques et géographiques.
+""")
+
+# Chargement des données
+logger.info("Chargement du dataset California Housing...")
+housing = fetch_california_housing(as_frame=True)
+data = housing.data
+data["MedHouseVal"] = housing.target * 100000
+logger.info("Dataset chargé avec succès.")
+
+# Expander pour afficher les données
+with st.expander("🔍 Voir les données brutes"):
+    st.dataframe(data)
+
+# Carte interactive avec Plotly
+st.subheader("🗺️ Répartition géographique des logements")
+logger.info("Affichage de la carte interactive.")
+
+fig = px.scatter_mapbox(
+    data,
+    lat="Latitude",             # Latitude des points
+    lon="Longitude",            # Longitude des points
+    color="MedHouseVal",        # Couleur basée sur la valeur médiane des maisons
+    size="MedHouseVal",          # Taille des points basée sur la population
+    hover_data=["MedInc","HouseAge","AveRooms", "AveBedrms","Population","AveOccup"],  # Informations supplémentaires au survol
+    color_continuous_scale="Viridis",     # Échelle de couleur
+    size_max=15,
+    zoom=5,
+    height=600,
+    mapbox_style="open-street-map",
 )
 
+st.plotly_chart(fig, use_container_width=True)
 
+# URL du modèle
+model_url = os.getenv("model_url", "http://localhost:8000/predict")
+logger.info(f"URL du modèle : {model_url}")
+
+# Fonction de prédiction
 def model_prediction(input: dict) -> str:
-    """
-    Envoie les données au modèle via une requête POST et récupère la prédiction.
-    Args:
-        input (dict): Les données d'entrée au format JSON.
-    Returns:
-        str: La prédiction ou un message d'erreur.
-    """
-    url = "http://fastapi:8000/predict" #"http://localhost:8000/predict"
+    logger.info(f"Envoi des données au modèle : {input}")
     try:
-        response = requests.post(url, json=input)
-    except requests.exceptions.RequestException:
-        return "Erreur : le modèle n'a pas pu effectuer une prédiction."
+        response = requests.post(model_url, json=input)
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Erreur de connexion au modèle : {e}")
+        return "❌ Erreur : impossible de contacter le modèle."
+
     if response.status_code != 200:
-        return "Erreur : le modèle n'a pas pu effectuer une prédiction."
+        logger.error(f"Réponse invalide du modèle ({response.status_code}) : {response.text}")
+        return "⚠️ Erreur : le modèle a retourné une réponse incorrecte."
+
     prediction = response.json()["prediction"]
-    return f"Le prix prédit pour le logement est : {prediction*(10**5):.0f} dollars."
+    logger.info(f"Réponse reçue du modèle : {prediction}")
+    return f"💰 Le prix prédit pour le logement est : **{prediction*(10**5):,.0f} $**"
 
+# Formulaire utilisateur
+st.subheader("🧾 Entrez les caractéristiques du logement")
+with st.form("prediction_form"):
+    col1, col2 = st.columns(2)
+    with col1:
+        medinc = st.number_input("Revenu médian des ménages (en dizaines de milliers de $)", min_value=0.0, value=0.0)
+        houseage = st.number_input("Âge moyen des maisons (en années)", min_value=0.0, value=0.0)
+        averooms = st.number_input("Nombre moyen de pièces par logement", min_value=0.0, value=0.0)
+        avebedrms = st.number_input("Nombre moyen de chambres par logement", min_value=0.0, value=0.0)
+    with col2:
+        population = st.number_input("Population de la région", min_value=0.0, value=0.0)
+        aveoccup = st.number_input("Nombre moyen d'occupants par logement", min_value=0.0, value=0.0)
+        latitude = st.number_input("Latitude de la région", value=0.0)
+        longitude = st.number_input("Longitude de la région", value=0.0)
 
-medinc = st.text_input("Revenu médian des ménages", value=0.0)
-houseage = st.text_input("Âge moyen des maisons", value=0.0)
-averooms = st.text_input("Nombre moyen de pièces par logement", value=0.0)
-avebedrms = st.text_input("Nombre moyen de chambres par logement", value=0.0)
-population = st.text_input("Population de la région", value=0.0)
-aveoccup = st.text_input("Nombre moyen d'occupants par logement", value=0.0)
-latitude = st.text_input("Latitude de la région", value=0.0)
-longitude = st.text_input("Longitude de la région", value=0.0)
-
-# Bouton pour déclencher la prédiction
-if st.button("Prédire"):
-    try:
-        medinc = float(medinc)
-        houseage = float(houseage)
-        averooms = float(averooms)
-        avebedrms = float(avebedrms)
-        population = float(population)
-        aveoccup = float(aveoccup)
-        latitude = float(latitude)
-        longitude = float(longitude)
-
-        input = {
+    submitted = st.form_submit_button("📈 Prédire")
+    if submitted:
+        input_data = {
             "medinc": medinc,
             "houseage": houseage,
             "averooms": averooms,
@@ -58,7 +103,18 @@ if st.button("Prédire"):
             "latitude": latitude,
             "longitude": longitude,
         }
-        prediction = model_prediction(input=input)
-        st.write(prediction)
-    except ValueError:
-        st.write("Veuillez entrer des nombres valides dans tous les champs.")
+        logger.info("Formulaire soumis par l'utilisateur.")
+        prediction = model_prediction(input_data)
+        if "Erreur" in prediction:
+            st.error(prediction)
+        else:
+            st.success(prediction)
+
+# Footer
+st.markdown("---")
+st.markdown("""
+© 2025 - Application développée avec ❤️ avec [Streamlit](https://streamlit.io/) | 
+Construite avec **Poetry**, **MLflow**, **FastAPI**.
+""")
+
+logger.info("Fin de chargement de la page.")

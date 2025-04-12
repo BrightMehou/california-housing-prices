@@ -45,24 +45,13 @@ Voici la structure du projet :
    - Un autre fichier Dockerfile permet de containeriser l'interface utilisateur.
    - Le fichier docker-compose.yml facilite l'orchestration des services (API, MLflow, etc.).
 
-## 📥 Installation
+## 📥 Installation et utilisation
 
 1. **Cloner le répertoire** :
    ```bash
    git clone <url_du_repository>
    cd <nom_du_repertoire>
    ```
-
-2. **Installer Poetry** :
-   Si Poetry n'est pas encore installé : [Poetry](https://python-poetry.org/docs/)
-
-3. **Installer les dépendances** :
-   ```bash
-   poetry install --no-root
-   ```
-
-## Utilisation
-
 ### Démarrer l'API et l'Interface Utilisateur avec Docker
 
 1. Construire et lancer les conteneurs :
@@ -77,14 +66,24 @@ Voici la structure du projet :
 
 ### Entraînement, Évaluation et Mise en production des Modèles
 
-1. Exécuter le script d'entraînement :
+1. **Installer Poetry** :
+   Si Poetry n'est pas encore installé : [Poetry](https://python-poetry.org/docs/)
+
+2. **Installer les dépendances** :
+   ```bash
+   poetry install --no-root
+   ```
+
+3. Exécuter le script d'entraînement :
    ```bash
    poetry run python src/ml/train.py
    ```
-2. Le modèle et métriques seront journalisés dans MLflow.
+
+4. Le modèle et métriques seront journalisés dans MLflow.
    ```bash
    poetry run mlflow ui
    ```
+
 ### Accéder aux expérimentation du notebook experiments
 
 1. Accéder au dossier notebook :

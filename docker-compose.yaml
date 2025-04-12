@@ -12,5 +12,6 @@ services:
       - "8501:8501"
     depends_on:
       - fastapi
-
+    environment:
+      - model_url=http://fastapi:8000/predict
   
