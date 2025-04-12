@@ -74,47 +74,45 @@ def model_prediction(input: dict) -> str:
 
     prediction = response.json()["prediction"]
     logger.info(f"Réponse reçue du modèle : {prediction}")
-    return f"💰 Le prix prédit pour le logement est : **{prediction*(10**5):,.0f} $**"
+    return f"💰 Le prix prédit pour le logement est : **{prediction*(10**5):,.0f} $**."
 
 # Formulaire utilisateur
 st.subheader("🧾 Entrez les caractéristiques du logement")
-with st.form("prediction_form"):
-    col1, col2 = st.columns(2)
-    with col1:
-        medinc = st.number_input("Revenu médian des ménages (en dizaines de milliers de $)", min_value=0.0, value=0.0)
-        houseage = st.number_input("Âge moyen des maisons (en années)", min_value=0.0, value=0.0)
-        averooms = st.number_input("Nombre moyen de pièces par logement", min_value=0.0, value=0.0)
-        avebedrms = st.number_input("Nombre moyen de chambres par logement", min_value=0.0, value=0.0)
-    with col2:
-        population = st.number_input("Population de la région", min_value=0.0, value=0.0)
-        aveoccup = st.number_input("Nombre moyen d'occupants par logement", min_value=0.0, value=0.0)
-        latitude = st.number_input("Latitude de la région", value=0.0)
-        longitude = st.number_input("Longitude de la région", value=0.0)
+col1, col2 = st.columns(2)
+with col1:
+    medinc = st.number_input("Revenu médian des ménages (en dizaines de milliers de $)", min_value=0.0, value=0.0)
+    houseage = st.number_input("Âge moyen des maisons (en années)", min_value=0.0, value=0.0)
+    averooms = st.number_input("Nombre moyen de pièces par logement", min_value=0.0, value=0.0)
+    avebedrms = st.number_input("Nombre moyen de chambres par logement", min_value=0.0, value=0.0)
+with col2:
+    population = st.number_input("Population de la région", min_value=0.0, value=0.0)
+    aveoccup = st.number_input("Nombre moyen d'occupants par logement", min_value=0.0, value=0.0)
+    latitude = st.number_input("Latitude de la région", value=0.0)
+    longitude = st.number_input("Longitude de la région", value=0.0)
 
-    submitted = st.form_submit_button("📈 Prédire")
-    if submitted:
-        input_data = {
-            "medinc": medinc,
-            "houseage": houseage,
-            "averooms": averooms,
-            "avebedrms": avebedrms,
-            "population": population,
-            "aveoccup": aveoccup,
-            "latitude": latitude,
-            "longitude": longitude,
-        }
-        logger.info("Formulaire soumis par l'utilisateur.")
-        prediction = model_prediction(input_data)
-        if "Erreur" in prediction:
-            st.error(prediction)
-        else:
-            st.success(prediction)
+bouton = st.button("📈 Prédire")
+if bouton:
+    input_data = {
+        "medinc": medinc,
+        "houseage": houseage,
+        "averooms": averooms,
+        "avebedrms": avebedrms,
+        "population": population,
+        "aveoccup": aveoccup,
+        "latitude": latitude,
+        "longitude": longitude,
+    }
+    logger.info("Formulaire soumis par l'utilisateur.")
+    prediction = model_prediction(input_data)
+    if "Erreur" in prediction:
+        st.error(prediction)
+    else:
+        st.success(prediction)
 
-# Footer
 st.markdown("---")
 st.markdown("""
 © 2025 - Application développée avec ❤️ avec [Streamlit](https://streamlit.io/) | 
-Construite avec **Poetry**, **MLflow**, **FastAPI**.
+Construite avec **Python**, **Poetry**, **Scikit-learn**, **MLflow**, **FastAPI** et **Docker**.
 """)
 
 logger.info("Fin de chargement de la page.")
