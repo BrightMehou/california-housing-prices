@@ -111,7 +111,7 @@ if bouton:
 
 st.markdown("---")
 st.markdown("""
-© 2025 - Application développée avec ❤️ avec [Streamlit](https://streamlit.io/) | 
+© 2025 - Application développée avec [Streamlit](https://streamlit.io/) | 
 Construite avec **Python**, **Poetry**, **Scikit-learn**, **MLflow**, **FastAPI** et **Docker**.
 """)
 
