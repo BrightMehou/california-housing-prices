@@ -92,7 +92,7 @@ def log_model(
         mlflow.log_metrics(metrics)
         mlflow.sklearn.log_model(
             sk_model=model,
-            artifact_path="sklearn-model",
+            name="sklearn-model",
             signature=signature,
             registered_model_name=model_name,
         )
