@@ -1,7 +1,8 @@
-from streamlit.testing.v1 import AppTest
-from src.interface.interface import model_prediction
 import pytest
 import requests
+from streamlit.testing.v1 import AppTest
+
+from src.interface.interface import model_prediction
 
 
 # Classe personnalisée pour être la valeur de retour mock

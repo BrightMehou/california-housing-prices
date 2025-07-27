@@ -1,8 +1,9 @@
-import os
-import streamlit as st
-import requests
 import logging
+import os
+
 import plotly.express as px
+import requests
+import streamlit as st
 from sklearn.datasets import fetch_california_housing
 
 # Configuration du logging

@@ -1,11 +1,8 @@
 import logging
-from sklearn.datasets import fetch_california_housing
 
-from evidently import Dataset
-from evidently import Report
-from evidently.metrics import *
-from evidently.presets import *
-from evidently.tests import *
+from evidently import Dataset, Report
+from evidently.presets import DataDriftPreset
+from sklearn.datasets import fetch_california_housing
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"

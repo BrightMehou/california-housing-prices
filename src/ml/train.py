@@ -1,14 +1,14 @@
-from sklearn.model_selection import train_test_split
-from sklearn.base import BaseEstimator
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from sklearn.datasets import fetch_california_housing
-from pandas import DataFrame
+import logging
+
 import mlflow
 import mlflow.sklearn
 from mlflow.models import infer_signature
-import logging
+from pandas import DataFrame
+from sklearn.base import BaseEstimator
+from sklearn.datasets import fetch_california_housing
 from sklearn.ensemble import GradientBoostingRegressor
-
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.model_selection import train_test_split
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"

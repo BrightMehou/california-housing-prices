@@ -1,11 +1,12 @@
 import pytest
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.datasets import fetch_california_housing
-from src.ml.train import train_model, evalute_model, log_model
-from sklearn.model_selection import train_test_split
 from mlflow import MlflowClient
 from pandas import DataFrame
 from sklearn.base import BaseEstimator
+from sklearn.datasets import fetch_california_housing
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
+
+from src.ml.train import evalute_model, log_model, train_model
 
 
 @pytest.fixture
@@ -58,7 +59,7 @@ def test_experiment(mlflow_client: MlflowClient) -> None:
     """
     experiment_name = "test_experiment"
     experiment = mlflow_client.get_experiment_by_name(experiment_name)
-    if None == experiment:
+    if experiment is None:
         mlflow_client.create_experiment(experiment_name)
 
 
