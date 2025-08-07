@@ -83,17 +83,3 @@ Voici la structure du projet :
    ```bash
    poetry run mlflow ui
    ```
-
-### Accéder aux expérimentation du notebook experiments
-
-1. Accéder au dossier notebook :
-   ```bash
-   cd notebooks
-   ```
-2. Lancer l'interface UI de mlfow:
-   ```bash
-   poetry run mlflow ui --backend-store-uri sqlite:///mlflow.db
-   ```
-3. Accéder à l'interface UI de mlfow:
-   - url : `http://localhost:5000`
-`
