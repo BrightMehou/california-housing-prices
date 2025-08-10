@@ -25,4 +25,6 @@ pytest = "^8.4.1"
 black = "^25.1.0"
 ruff = "^0.12.5"
 ipykernel = "^6.30.1"
+nbformat = "^5.10.4"
+shap = "^0.48.0"
 
