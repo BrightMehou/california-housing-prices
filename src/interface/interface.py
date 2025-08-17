@@ -3,6 +3,7 @@ import os
 
 import plotly.express as px
 import requests
+import pandas as pd
 import streamlit as st
 from sklearn.datasets import fetch_california_housing
 
@@ -61,21 +62,26 @@ model_url = os.getenv("model_url", "http://localhost:8000/predict")
 logger.info(f"URL du modèle : {model_url}")
 
 # Fonction de prédiction
-def model_prediction(input: dict) -> str:
+def model_prediction(input: dict):
     logger.info(f"Envoi des données au modèle : {input}")
     try:
         response = requests.post(model_url, json=input)
     except requests.exceptions.RequestException as e:
         logger.error(f"Erreur de connexion au modèle : {e}")
-        return "❌ Erreur : impossible de contacter le modèle."
+        return "❌ Erreur : impossible de contacter le modèle.", None
 
     if response.status_code != 200:
         logger.error(f"Réponse invalide du modèle ({response.status_code}) : {response.text}")
-        return "⚠️ Erreur : le modèle a retourné une réponse incorrecte."
+        return "⚠️ Erreur : le modèle a retourné une réponse incorrecte.", None
 
-    prediction = response.json()["prediction"]
-    logger.info(f"Réponse reçue du modèle : {prediction}")
-    return f"💰 Le prix prédit pour le logement est : **{prediction*(10**5):,.0f} $**."
+    result = response.json()
+    prediction = result["prediction"][0]
+    shap_values = result.get("shap_values", [[]])[0]
+
+    logger.info(f"Réponse reçue du modèle : {prediction} avec SHAP {shap_values}")
+
+    text_output = f"💰 Le prix prédit pour le logement est : **{prediction*(10**5):,.0f} $**."
+    return text_output, shap_values
 
 # Formulaire utilisateur
 st.subheader("🧾 Entrez les caractéristiques du logement")
@@ -104,11 +110,20 @@ if bouton:
         "longitude": longitude,
     }
     logger.info("Formulaire soumis par l'utilisateur.")
-    prediction = model_prediction(input_data)
-    if "Erreur" in prediction:
-        st.error(prediction)
+    prediction_text, shap_values = model_prediction(input_data)
+
+    if "Erreur" in prediction_text:
+        st.error(prediction_text)
     else:
-        st.success(prediction)
+        st.success(prediction_text)
+
+    if shap_values:
+        feature_names = ["MedInc","HouseAge","AveRooms","AveBedrms","Population","AveOccup","Latitude","Longitude"]
+        shap_df = pd.DataFrame([shap_values], columns=feature_names)
+        shap_df = shap_df.melt(var_name="Feature", value_name="SHAP value")
+
+        fig = px.bar(shap_df, x="Feature", y="SHAP value", title="Importance des features (SHAP)")
+        st.plotly_chart(fig)
 
 st.markdown("---")
 st.markdown("""

@@ -23,11 +23,11 @@ def test_api_is_running(client: TestClient) -> None:
 
     - Envoie une requête GET à "/".
     - Vérifie que le code de statut est 200.
-    - Vérifie que le message de réponse correspond à {"msg": "Hello World"}.
+    - Vérifie que le message de réponse correspond à {"msg": "API is running"}.
     """
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == {"msg": "Hello World"}
+    assert response.json() == {"msg": "API is running"}
 
 
 # Test pour vérifier une prédiction valide
@@ -55,7 +55,7 @@ def test_valid_prediction(client: TestClient) -> None:
     print(response.json())
     assert response.status_code == 200
     assert "prediction" in response.json()
-    assert isinstance(response.json()["prediction"], float)
+    assert isinstance(response.json()["prediction"][0], float)
 
 
 # Test pour vérifier les entrées manquantes

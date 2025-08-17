@@ -1,91 +1,62 @@
-import mlflow.pyfunc
-import numpy as np
-import pandas as pd
 from fastapi import FastAPI
+import mlflow
+import pandas as pd
+from mlflow.tracking import MlflowClient
 from pydantic import BaseModel
 
-
-# Schéma pour représenter les données d'entrée sous forme structurée
-class Input(BaseModel):
-    medinc: float  # Revenu médian des ménages
-    houseage: float  # Âge moyen des maisons
-    averooms: float  # Nombre moyen de pièces par logement
-    avebedrms: float  # Nombre moyen de chambres par logement
-    population: float  # Population de la région
-    aveoccup: float  # Nombre moyen d'occupants par logement
-    latitude: float  # Latitude de la région
-    longitude: float  # Longitude de la région
-
-
-# Nom et version du modèle à charger depuis MLflow
-model_name = "Production-model"
-model_version = 1
-
-# Charger le modèle MLflow spécifié
-model = mlflow.pyfunc.load_model(model_uri=f"models:/{model_name}/{model_version}")
-
-# Initialiser l'application FastAPI
 app = FastAPI(
     title="Prédiction des prix des logements en Californie",
-    description="API simple pour prédire les prix des logements en Californie",
+    description="API simple pour prédire les prix des logements en Californie avec SHAP values",
     version="0.1.0",
 )
 
+class InputFeatures(BaseModel):
+    medinc: float
+    houseage: float
+    averooms: float
+    avebedrms: float
+    population: float
+    aveoccup: float
+    latitude: float
+    longitude: float
+
+def get_latest_run_id(model_name="Production-model"):
+    client = MlflowClient()
+    versions = client.get_latest_versions(model_name, stages=["None"])
+    if not versions:
+        raise ValueError(f"No versions found for model '{model_name}'")
+    latest_version = max(versions, key=lambda v: int(v.version))
+    return latest_version.run_id
+
+RUN_ID = get_latest_run_id("Production-model")
+MODEL_URI = f"runs:/{RUN_ID}/model"
+EXPLAINER_URI = f"runs:/{RUN_ID}/explainer"
+
+MODEL = mlflow.pyfunc.load_model(MODEL_URI)
+EXPLAINER = mlflow.pyfunc.load_model(EXPLAINER_URI)
 
 @app.get("/")
-async def read_main() -> dict:
-    """
-    Point de terminaison racine de l'API.
-
-    Retourne un message de bienvenue pour indiquer que l'API fonctionne.
-    """
-    return {"msg": "Hello World"}
-
+async def read_main():
+    return {"msg": "API is running"}
 
 @app.post("/predict")
-def predict(input_data: Input) -> dict:
-    """
-    Point de terminaison pour effectuer une prédiction des prix des logements.
+def predict(input_data: InputFeatures):
+    # Mapper les clés du JSON aux colonnes du modèle
+    df = pd.DataFrame([{
+        "MedInc": input_data.medinc,
+        "HouseAge": input_data.houseage,
+        "AveRooms": input_data.averooms,
+        "AveBedrms": input_data.avebedrms,
+        "Population": input_data.population,
+        "AveOccup": input_data.aveoccup,
+        "Latitude": input_data.latitude,
+        "Longitude": input_data.longitude,
+    }])
 
-    Args:
-        input_data (Input): Données d'entrée structurées contenant les caractéristiques nécessaires pour la prédiction.
+    prediction = MODEL.predict(df)
+    shap_values = EXPLAINER.predict(df)
 
-    Returns:
-        dict: Prédiction du prix du logement sous la forme d'un dictionnaire.
-    """
-    # Convertir les données d'entrée en tableau NumPy
-    features = np.array(
-        [
-            [
-                input_data.medinc,
-                input_data.houseage,
-                input_data.averooms,
-                input_data.avebedrms,
-                input_data.population,
-                input_data.aveoccup,
-                input_data.latitude,
-                input_data.longitude,
-            ]
-        ]
-    )
-
-    # Transformer les données en DataFrame pour correspondre au format attendu par le modèle
-    features = pd.DataFrame(
-        features,
-        columns=[
-            "MedInc",
-            "HouseAge",
-            "AveRooms",
-            "AveBedrms",
-            "Population",
-            "AveOccup",
-            "Latitude",
-            "Longitude",
-        ],
-    )
-
-    # Effectuer une prédiction avec le modèle chargé
-    prediction = model.predict(features)
-
-    # Retourner le résultat sous forme de JSON
-    return {"prediction": float(prediction[0])}
+    return {
+        "prediction": prediction.tolist(),
+        "shap_values": shap_values.tolist()
+    }

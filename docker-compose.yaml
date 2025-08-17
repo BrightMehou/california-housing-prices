@@ -4,6 +4,9 @@ services:
       context: .
     ports:
       - 8000:8000
+    environment:
+      - MODEL_NAME=Production-model
+      - GIT_PYTHON_REFRESH=quiet
   interface:
     build:
       context: .
@@ -14,4 +17,5 @@ services:
       - fastapi
     environment:
       - model_url=http://fastapi:8000/predict
+      
   

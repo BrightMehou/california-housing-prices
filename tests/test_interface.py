@@ -18,7 +18,7 @@ class MockResponseSuccess:
         """
         Retourne une réponse simulée avec une prédiction.
         """
-        return {"prediction": 3}
+        return {"prediction": [3.0], "shap_values": [[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]]}
 
 
 class MockResponseError:
@@ -57,8 +57,8 @@ def test_model_prediction_success(monkeypatch) -> None:
         "latitude": 37.0,
         "longitude": -122.0,
     }
-    result = model_prediction(input=input_data)
-    assert result == "💰 Le prix prédit pour le logement est : **300,000 $**."
+    text_output, shap_values = model_prediction(input=input_data)
+    assert text_output == "💰 Le prix prédit pour le logement est : **300,000 $**."
 
 
 def test_model_prediction_exception(monkeypatch) -> None:
@@ -82,8 +82,8 @@ def test_model_prediction_exception(monkeypatch) -> None:
         "latitude": 37.0,
         "longitude": -122.0,
     }
-    result = model_prediction(input=input_data)
-    assert result == "❌ Erreur : impossible de contacter le modèle."
+    text_output, shap_values = model_prediction(input=input_data)
+    assert text_output == "❌ Erreur : impossible de contacter le modèle."
 
 
 def test_model_prediction_http_error(monkeypatch):
@@ -107,8 +107,8 @@ def test_model_prediction_http_error(monkeypatch):
         "latitude": 37.0,
         "longitude": -122.0,
     }
-    result = model_prediction(input=input_data)
-    assert result == "⚠️ Erreur : le modèle a retourné une réponse incorrecte."
+    text_output, shap_values = model_prediction(input=input_data)
+    assert text_output == "⚠️ Erreur : le modèle a retourné une réponse incorrecte."
 
 
 @pytest.fixture
