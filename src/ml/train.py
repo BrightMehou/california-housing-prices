@@ -21,7 +21,12 @@ def main() -> None:
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=random_state
     )
-    params = {"n_estimators": 150, "max_depth": 5, "learning_rate": 0.15 ,"random_state": random_state}
+    params = {
+        "n_estimators": 150,
+        "max_depth": 5,
+        "learning_rate": 0.15,
+        "random_state": random_state,
+    }
     run_name = "Production-model"
     model_name = "Production-model"
     explainer_name = "explainer"
@@ -37,7 +42,7 @@ def main() -> None:
         eval_data["target"] = y_test
 
         result = mlflow.evaluate(
-            model=model_uri,  
+            model=model_uri,
             data=eval_data,
             targets="target",
             model_type="regressor",
@@ -45,13 +50,14 @@ def main() -> None:
             evaluator_config={
                 "log_explainer": True,
                 "explainer_artifact_path": explainer_name,
-                "explainer_type": "permutation"
+                "explainer_type": "permutation",
             },
         )
         logger.info(f"Evaluation completed. Artifacts: {result.artifacts}")
 
         run_id = mlflow.active_run().info.run_id
         logger.info(f"Run ID: {run_id}")
+
 
 if __name__ == "__main__":
     main()

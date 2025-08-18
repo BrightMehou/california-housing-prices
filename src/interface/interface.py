@@ -1,16 +1,14 @@
 import logging
 import os
 
+import pandas as pd
 import plotly.express as px
 import requests
-import pandas as pd
 import streamlit as st
-
 
 # Configuration du logging
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -21,15 +19,18 @@ logger.info("Démarrage de l'application Streamlit.")
 
 # Titre principal
 st.title("🏠 Prédiction du prix des logements en Californie")
-st.markdown("""
+st.markdown(
+    """
 Cette application utilise un modèle de machine learning pour prédire le prix des logements en Californie 
 en fonction de plusieurs caractéristiques socio-démographiques et géographiques.
-""")
+"""
+)
 
 
 # URL du modèle
 model_url = os.getenv("model_url", "http://localhost:8000/predict")
 logger.info(f"URL du modèle : {model_url}")
+
 
 # Fonction de prédiction
 def model_prediction(input: dict):
@@ -41,7 +42,9 @@ def model_prediction(input: dict):
         return "❌ Erreur : impossible de contacter le modèle.", None
 
     if response.status_code != 200:
-        logger.error(f"Réponse invalide du modèle ({response.status_code}) : {response.text}")
+        logger.error(
+            f"Réponse invalide du modèle ({response.status_code}) : {response.text}"
+        )
         return "⚠️ Erreur : le modèle a retourné une réponse incorrecte.", None
 
     result = response.json()
@@ -50,20 +53,35 @@ def model_prediction(input: dict):
 
     logger.info(f"Réponse reçue du modèle : {prediction} avec SHAP {shap_values}")
 
-    text_output = f"💰 Le prix prédit pour le logement est : **{prediction*(10**5):,.0f} $**."
+    text_output = (
+        f"💰 Le prix prédit pour le logement est : **{prediction*(10**5):,.0f} $**."
+    )
     return text_output, shap_values
+
 
 # Formulaire utilisateur
 st.subheader("🧾 Entrez les caractéristiques du logement")
 col1, col2 = st.columns(2)
 with col1:
-    medinc = st.number_input("Revenu médian des ménages (en dizaines de milliers de $)", min_value=0.0, value=0.0)
-    houseage = st.number_input("Âge moyen des maisons (en années)", min_value=0.0, value=0.0)
-    averooms = st.number_input("Nombre moyen de pièces par logement", min_value=0.0, value=0.0)
-    avebedrms = st.number_input("Nombre moyen de chambres par logement", min_value=0.0, value=0.0)
+    medinc = st.number_input(
+        "Revenu médian des ménages (en dizaines de milliers de $)",
+        min_value=0.0,
+        value=0.0,
+    )
+    houseage = st.number_input(
+        "Âge moyen des maisons (en années)", min_value=0.0, value=0.0
+    )
+    averooms = st.number_input(
+        "Nombre moyen de pièces par logement", min_value=0.0, value=0.0
+    )
+    avebedrms = st.number_input(
+        "Nombre moyen de chambres par logement", min_value=0.0, value=0.0
+    )
 with col2:
     population = st.number_input("Population de la région", min_value=0.0, value=0.0)
-    aveoccup = st.number_input("Nombre moyen d'occupants par logement", min_value=0.0, value=0.0)
+    aveoccup = st.number_input(
+        "Nombre moyen d'occupants par logement", min_value=0.0, value=0.0
+    )
     latitude = st.number_input("Latitude de la région", value=0.0)
     longitude = st.number_input("Longitude de la région", value=0.0)
 
@@ -88,17 +106,30 @@ if bouton:
         st.success(prediction_text)
 
     if shap_values:
-        feature_names = ["MedInc","HouseAge","AveRooms","AveBedrms","Population","AveOccup","Latitude","Longitude"]
+        feature_names = [
+            "MedInc",
+            "HouseAge",
+            "AveRooms",
+            "AveBedrms",
+            "Population",
+            "AveOccup",
+            "Latitude",
+            "Longitude",
+        ]
         shap_df = pd.DataFrame([shap_values], columns=feature_names)
         shap_df = shap_df.melt(var_name="Feature", value_name="SHAP value")
 
-        fig = px.bar(shap_df, x="Feature", y="SHAP value", title="Importance des features (SHAP)")
+        fig = px.bar(
+            shap_df, x="Feature", y="SHAP value", title="Importance des features (SHAP)"
+        )
         st.plotly_chart(fig)
 
 st.markdown("---")
-st.markdown("""
+st.markdown(
+    """
 © 2025 - Application développée avec [Streamlit](https://streamlit.io/) | 
 Construite avec **Python**, **Poetry**, **Scikit-learn**, **MLflow**, **FastAPI** et **Docker**.
-""")
+"""
+)
 
 logger.info("Fin de chargement de la page.")
