@@ -5,7 +5,7 @@ import plotly.express as px
 import requests
 import pandas as pd
 import streamlit as st
-from sklearn.datasets import fetch_california_housing
+
 
 # Configuration du logging
 logging.basicConfig(
@@ -26,36 +26,6 @@ Cette application utilise un modèle de machine learning pour prédire le prix d
 en fonction de plusieurs caractéristiques socio-démographiques et géographiques.
 """)
 
-# Chargement des données
-logger.info("Chargement du dataset California Housing...")
-housing = fetch_california_housing(as_frame=True)
-data = housing.data
-data["MedHouseVal"] = housing.target * 100000
-logger.info("Dataset chargé avec succès.")
-
-# Expander pour afficher les données
-with st.expander("🔍 Voir les données brutes"):
-    st.dataframe(data)
-
-# Carte interactive avec Plotly
-st.subheader("🗺️ Répartition géographique des logements")
-logger.info("Affichage de la carte interactive.")
-
-fig = px.scatter_mapbox(
-    data,
-    lat="Latitude",             # Latitude des points
-    lon="Longitude",            # Longitude des points
-    color="MedHouseVal",        # Couleur basée sur la valeur médiane des maisons
-    size="MedHouseVal",          # Taille des points basée sur la population
-    hover_data=["MedInc","HouseAge","AveRooms", "AveBedrms","Population","AveOccup"],  # Informations supplémentaires au survol
-    color_continuous_scale="Viridis",     # Échelle de couleur
-    size_max=15,
-    zoom=5,
-    height=600,
-    mapbox_style="open-street-map",
-)
-
-st.plotly_chart(fig, use_container_width=True)
 
 # URL du modèle
 model_url = os.getenv("model_url", "http://localhost:8000/predict")
