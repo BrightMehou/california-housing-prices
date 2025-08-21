@@ -31,7 +31,6 @@ Voici la structure du projet :
 
 3. **Notebooks Jupyter** :
    - **Analyse_des_features** : Utilisation de SHAP pour analyser l'importance des caractéristiques dans les prédictions.
-   - **Analyse_exploratoire** : Exploration des données pour comprendre leur structure et identifier des tendances.
    - **Experimentations** : Création et évaluation de plusieurs modèles, avec journalisation des résultats dans MLflow pour 
 
 4. **Scripts de Machine Learning** :

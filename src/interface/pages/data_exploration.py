@@ -122,6 +122,21 @@ fig = px.histogram(data, x=feature, nbins=30, title=f"Histogramme de {feature}")
 st.plotly_chart(fig, use_container_width=True)
 
 
+st.markdown(
+"""
+Nous pouvons d'abord nous concentrer sur les caractéristiques dont les distributions seraient plus ou moins attendues.
+
+Le revenu médian présente une distribution avec une longue queue. Cela signifie que les salaires des individus sont plus ou moins distribués normalement, mais qu'il existe certaines personnes ayant des salaires très élevés.
+
+En ce qui concerne l'âge moyen des maisons, la distribution est plus ou moins uniforme.
+
+La distribution de la cible présente également une longue queue. De plus, il existe un effet de seuil pour les maisons de grande valeur : toutes les maisons avec un prix supérieur à 5 se voient attribuer la valeur 5.
+
+En se concentrant sur les pièces moyennes, les chambres moyennes, l'occupation moyenne et la population, l'étendue des données est importante, avec des intervalles presque invisibles pour les valeurs les plus élevées. Cela signifie qu'il y a des valeurs très élevées et peu fréquentes.
+
+Jusqu'à présent, nous avons écarté la longitude et la latitude, qui contiennent des informations géographiques. En résumé, la combinaison de ces caractéristiques pourrait nous aider à déterminer s'il existe des emplacements associés à des maisons de grande valeur. En effet, nous pourrions créer un graphique de dispersion où les axes x et y représenteraient la latitude et la longitude, et où la taille et la couleur des cercles seraient liées à la valeur des maisons dans chaque district.
+"""
+)
 st.subheader("🗺️ Répartition géographique des logements")
 
 st.markdown(

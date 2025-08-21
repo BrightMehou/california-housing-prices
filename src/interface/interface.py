@@ -78,12 +78,12 @@ with col1:
         "Nombre moyen de chambres par logement", min_value=0.0, value=0.0
     )
 with col2:
-    population = st.number_input("Population de la région", min_value=0.0, value=0.0)
+    population = st.number_input("Population de la région", min_value=1.0, value=1.0)
     aveoccup = st.number_input(
         "Nombre moyen d'occupants par logement", min_value=0.0, value=0.0
     )
-    latitude = st.number_input("Latitude de la région", value=0.0)
-    longitude = st.number_input("Longitude de la région", value=0.0)
+    latitude = st.number_input("Latitude de la région", min_value=31.0, max_value=43.0, value=37.0)
+    longitude = st.number_input("Longitude de la région",min_value=-125.0, max_value=-113.0, value=-119.0)
 
 bouton = st.button("📈 Prédire")
 if bouton:
