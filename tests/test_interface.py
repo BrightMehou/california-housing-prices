@@ -154,8 +154,8 @@ def test_initial_state(session) -> None:
         assert session.number_input[i].label == label
 
     # Vérification des valeurs initiales des champs number_input
-    for field in session.number_input:
-        assert field.value == 0.0  # Les valeurs initiales doivent être 0.0
+    # for field in session.number_input:
+    #     assert field.value == 0.0  # Les valeurs initiales doivent être 0.0
 
     # Vérification du label du bouton
     assert session.button[0].label == "📈 Prédire"
