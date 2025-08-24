@@ -1,3 +1,10 @@
+"""
+Script d'entraînement pour un modèle de prédiction des prix des logements en Californie 🏡
+
+Ce script utilise un GradientBoostingRegressor pour prédire les prix à partir du dataset California Housing.
+Le modèle est logué avec MLflow et évalué avec génération d’un explainer pour l’interprétation des prédictions.
+"""
+
 import logging
 
 import mlflow
@@ -12,32 +19,43 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def main() -> None:
-    random_state = 42
-    housing = fetch_california_housing(as_frame=True)
+def train(random_state: int = 42) -> None:
+    """
+    Entraîne et logue un modèle de régression avec MLflow.
 
+    Args:
+        random_state (int): Graine aléatoire pour la reproductibilité.
+    """
+    # Chargement des données
+    housing = fetch_california_housing(as_frame=True)
     X = housing.data
     y = housing.target
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=random_state
     )
+
+    # Paramètres du modèle
     params = {
         "n_estimators": 150,
         "max_depth": 5,
         "learning_rate": 0.15,
         "random_state": random_state,
     }
+
+    # Configuration MLflow
     run_name = "Production-model"
     model_name = "Production-model"
     explainer_name = "explainer"
+
     with mlflow.start_run(run_name=run_name):
         mlflow.sklearn.autolog(registered_model_name=model_name)
         model = GradientBoostingRegressor(**params)
         model.fit(X_train, y_train)
-        logger.info("Model training completed.")
+        logger.info("✅ Entraînement du modèle terminé.")
 
         model_uri = f"runs:/{mlflow.active_run().info.run_id}/model"
 
+        # Préparation des données d’évaluation
         eval_data = X_test.copy()
         eval_data["target"] = y_test
 
@@ -53,10 +71,17 @@ def main() -> None:
                 "explainer_type": "permutation",
             },
         )
-        logger.info(f"Evaluation completed. Artifacts: {result.artifacts}")
+        logger.info(f"📊 Évaluation terminée. Artifacts : {result.artifacts}")
+        logger.info(f"🔁 Run ID : {mlflow.active_run().info.run_id}")
 
-        run_id = mlflow.active_run().info.run_id
-        logger.info(f"Run ID: {run_id}")
+
+def main():
+    """
+    Point d’entrée du script d’entraînement.
+    """
+    logger.info("🚀 Démarrage du script d'entraînement...")
+    train()
+    logger.info("🏁 Script terminé.")
 
 
 if __name__ == "__main__":

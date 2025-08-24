@@ -7,7 +7,7 @@ from pydantic import BaseModel
 app = FastAPI(
     title="Prédiction des prix des logements en Californie",
     description="API simple pour prédire les prix des logements en Californie avec SHAP values",
-    version="0.1.0",
+    version="0.2.0",
 )
 
 
@@ -23,6 +23,15 @@ class InputFeatures(BaseModel):
 
 
 def get_latest_run_id(model_name="Production-model"):
+    """
+    Retourne le run_id de la version la plus récente du modèle MLflow spécifié.
+
+    Args:
+        model_name (str): Nom du modèle MLflow.
+
+    Returns:
+        str: Identifiant de l'exécution (run_id).
+    """
     client = MlflowClient()
     versions = client.get_latest_versions(model_name, stages=["None"])
     if not versions:
@@ -46,7 +55,35 @@ async def read_main():
 
 @app.post("/predict")
 def predict(input_data: InputFeatures):
-    # Mapper les clés du JSON aux colonnes du modèle
+    """
+    Prédit le prix d’un logement en Californie à partir de ses caractéristiques.
+
+    Cette fonction reçoit les données d’entrée sous forme d’un objet `InputFeatures`,
+    les transforme en DataFrame compatible avec le modèle MLflow, puis retourne :
+    - La prédiction du prix du logement
+    - Les valeurs SHAP associées pour interpréter la contribution de chaque feature
+
+    Paramètres :
+    ----------
+    input_data : InputFeatures
+        Données d’entrée contenant les caractéristiques du logement :
+        - medinc : revenu médian
+        - houseage : âge moyen des habitations
+        - averooms : nombre moyen de pièces
+        - avebedrms : nombre moyen de chambres
+        - population : population du quartier
+        - aveoccup : taux d’occupation moyen
+        - latitude : latitude géographique
+        - longitude : longitude géographique
+
+    Retour :
+    -------
+    dict
+        Un dictionnaire contenant :
+        - "prediction" : liste avec le prix prédit
+        - "shap_values" : liste des valeurs SHAP pour chaque feature
+    """
+
     df = pd.DataFrame(
         [
             {

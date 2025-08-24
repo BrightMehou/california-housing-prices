@@ -123,7 +123,7 @@ st.plotly_chart(fig, use_container_width=True)
 
 
 st.markdown(
-"""
+    """
 Nous pouvons d'abord nous concentrer sur les caractéristiques dont les distributions seraient plus ou moins attendues.
 
 Le revenu médian présente une distribution avec une longue queue. Cela signifie que les salaires des individus sont plus ou moins distribués normalement, mais qu'il existe certaines personnes ayant des salaires très élevés.

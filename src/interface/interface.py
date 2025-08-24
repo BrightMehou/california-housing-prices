@@ -34,6 +34,17 @@ logger.info(f"URL du modèle : {model_url}")
 
 # Fonction de prédiction
 def model_prediction(input: dict):
+    """
+    Envoie les données au modèle via une requête POST et retourne la prédiction formatée
+    ainsi que les valeurs SHAP pour l’explication.
+
+    Args:
+        input (dict): Données du logement à prédire.
+
+    Returns:
+        tuple: Message textuel avec le prix prédit, et liste des valeurs SHAP.
+    """
+
     logger.info(f"Envoi des données au modèle : {input}")
     try:
         response = requests.post(model_url, json=input)
@@ -82,8 +93,12 @@ with col2:
     aveoccup = st.number_input(
         "Nombre moyen d'occupants par logement", min_value=0.0, value=0.0
     )
-    latitude = st.number_input("Latitude de la région", min_value=31.0, max_value=43.0, value=37.0)
-    longitude = st.number_input("Longitude de la région",min_value=-125.0, max_value=-113.0, value=-119.0)
+    latitude = st.number_input(
+        "Latitude de la région", min_value=31.0, max_value=43.0, value=37.0
+    )
+    longitude = st.number_input(
+        "Longitude de la région", min_value=-125.0, max_value=-113.0, value=-119.0
+    )
 
 bouton = st.button("📈 Prédire")
 if bouton:

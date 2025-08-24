@@ -2,28 +2,60 @@ import logging
 
 from evidently import Dataset, Report
 from evidently.presets import DataDriftPreset
+from pandas import DataFrame
 from sklearn.datasets import fetch_california_housing
 
+# Configuration du logger
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
-# Charger le dataset California Housing
-data = fetch_california_housing(as_frame=True)
-df = data["frame"]
 
-# Simuler des données de production en ajoutant un drift artificiel
-train_data = df.sample(frac=0.7, random_state=42)  # 70% pour l'entraînement
-prod_data = df.sample(frac=0.3, random_state=24)  # 30% pour la production
+def detect_drift(
+    reference_data: DataFrame,
+    current_data: DataFrame,
+    report_path: str = "data/data_drift_report.html",
+) -> None:
+    """
+    Détecte la dérive entre deux jeux de données et génère un rapport HTML.
 
-prod_data["MedInc"] *= 1.2
-prod_data["AveOccup"] *= 1.7
-ref = Dataset.from_pandas(train_data)
-curent = Dataset.from_pandas(prod_data)
-report = Report([DataDriftPreset()], include_tests=True)
-logger.info("Starting data drift detection...")
-my_eval = report.run(curent, ref)
-logger.info("Data drift detection completed.")
-my_eval.save_html("data/data_drift_report.html")
-logger.info("Data drift report saved to data/data_drift_report.html")
+    Args:
+        reference_data (DataFrame): Données de référence (ex. données d'entraînement).
+        current_data (DataFrame): Données actuelles (ex. données de production).
+        report_path (str): Chemin de sauvegarde du rapport HTML.
+    """
+    reference: Dataset = Dataset.from_pandas(reference_data)
+    current: Dataset = Dataset.from_pandas(current_data)
+    report: Report = Report([DataDriftPreset()], include_tests=True)
+
+    logger.info("🚦 Début de la détection de dérive...")
+    my_eval = report.run(current, reference)
+    my_eval.save_html(report_path)
+    logger.info(f"📄 Rapport de dérive sauvegardé dans {report_path}")
+
+
+def main() -> None:
+    """
+    Point d’entrée du script de détection de dérive.
+    Simule les données de référence et actuelles, puis lance l’analyse.
+    """
+    logger.info("🔍 Chargement du dataset California Housing...")
+    data = fetch_california_housing(as_frame=True)
+    df: DataFrame = data["frame"]
+
+    # Simulation des données
+    train_data: DataFrame = df.sample(frac=0.7, random_state=42)
+    prod_data: DataFrame = df.sample(frac=0.3, random_state=24)
+
+    # Ajout de dérive artificielle
+    prod_data["MedInc"] *= 1.2
+    prod_data["AveOccup"] *= 1.7
+
+    # Lancement de la détection
+    detect_drift(train_data, prod_data, report_path="data/data_drift_report.html")
+    logger.info("✅ Script terminé.")
+
+
+if __name__ == "__main__":
+    main()
