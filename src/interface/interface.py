@@ -6,7 +6,7 @@ import plotly.express as px
 import requests
 import streamlit as st
 
-# Configuration du logging
+
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )

@@ -5,7 +5,6 @@ from evidently.presets import DataDriftPreset
 from pandas import DataFrame
 from sklearn.datasets import fetch_california_housing
 
-# Configuration du logger
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
