@@ -6,7 +6,6 @@ import plotly.express as px
 import requests
 import streamlit as st
 
-
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
@@ -29,7 +28,6 @@ en fonction de plusieurs caractéristiques socio-démographiques et géographiqu
 
 # URL du modèle
 model_url = os.getenv("model_url", "http://localhost:8000/predict")
-logger.info(f"URL du modèle : {model_url}")
 
 
 # Fonction de prédiction
@@ -115,6 +113,7 @@ if bouton:
     logger.info("Formulaire soumis par l'utilisateur.")
     prediction_text, shap_values = model_prediction(input_data)
 
+    shap_values = [round(val * 10**5, 0) for val in shap_values]
     if "Erreur" in prediction_text:
         st.error(prediction_text)
     else:
@@ -135,7 +134,10 @@ if bouton:
         shap_df = shap_df.melt(var_name="Feature", value_name="SHAP value")
 
         fig = px.bar(
-            shap_df, x="Feature", y="SHAP value", title="Importance des features (SHAP)"
+            shap_df,
+            x="Feature",
+            y="SHAP value",
+            title=f"Importance des features {sum(shap_values):,.0f} par rapport au prix de base moyen de 200,000 $",
         )
         st.plotly_chart(fig)
 
