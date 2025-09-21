@@ -62,23 +62,3 @@ Voici la structure du projet :
 
 3. Accéder à l'interface:
    - URL : `http://localhost:8501`
-
-### Entraînement, Évaluation et Mise en production des Modèles
-
-1. **Installer Poetry** :
-   Si Poetry n'est pas encore installé : [Poetry](https://python-poetry.org/docs/)
-
-2. **Installer les dépendances** :
-   ```bash
-   poetry install --no-root
-   ```
-
-3. Exécuter le script d'entraînement :
-   ```bash
-   poetry run python src/ml/train.py
-   ```
-
-4. Le modèle et métriques seront journalisés dans MLflow.
-   ```bash
-   poetry run mlflow ui
-   ```
