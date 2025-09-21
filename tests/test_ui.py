@@ -10,7 +10,7 @@ import pytest
 import requests
 from streamlit.testing.v1 import AppTest
 
-from src.interface.interface import model_prediction
+from src.ui.ui import model_prediction
 
 
 # Classe personnalisée pour être la valeur de retour mock
@@ -125,7 +125,7 @@ def session() -> AppTest:
     Initialise une session de test Streamlit.
     """
     at = AppTest.from_file(
-        "src/interface/interface.py"
+        "src/ui/ui.py"
     )  # Nom de votre fichier Streamlit
     at.run(timeout=10)
     return at

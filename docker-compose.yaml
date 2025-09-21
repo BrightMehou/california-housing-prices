@@ -10,7 +10,7 @@ services:
   interface:
     build:
       context: .
-      dockerfile: src/interface/Dockerfile
+      dockerfile: src/ui/Dockerfile
     ports:
       - "8501:8501"
     depends_on:
