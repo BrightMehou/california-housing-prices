@@ -1,3 +1,9 @@
+"""
+Script de détection de dérive de données.
+Ce fichier compare un jeu de données de référence à un jeu courant
+et génère un rapport HTML indiquant les éventuelles dérives.
+"""
+
 import logging
 
 from evidently import Dataset, Report

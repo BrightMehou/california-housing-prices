@@ -1,3 +1,10 @@
+"""
+Application Streamlit pour le déploiement d’un modèle de prédiction des prix
+des logements en Californie. Elle fournit une interface utilisateur interactive
+pour saisir les caractéristiques d’un logement, interroger l’API de prédiction
+et visualiser les explications SHAP associées.
+"""
+
 import logging
 import os
 

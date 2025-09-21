@@ -1,3 +1,12 @@
+"""
+Suite de tests Pytest pour l’API FastAPI de prédiction des prix des logements.  
+Elle vérifie :
+- l’accessibilité de l’API,  
+- la validité des prédictions,  
+- la gestion des champs manquants,  
+- et le traitement des types de données invalides.  
+"""
+
 import pytest
 from fastapi.testclient import TestClient
 

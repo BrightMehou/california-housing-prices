@@ -1,3 +1,9 @@
+"""
+API FastAPI pour déployer un modèle MLflow de prédiction des prix des logements en Californie.
+Elle charge le modèle et son explainer SHAP, puis expose des endpoints pour effectuer des prédictions
+et interpréter les contributions des variables.
+"""
+
 import mlflow
 import pandas as pd
 from fastapi import FastAPI

@@ -1,3 +1,10 @@
+"""
+Application Streamlit d’exploration du dataset California Housing.
+Elle permet de visualiser les données brutes, d’analyser les statistiques descriptives,
+d’explorer les corrélations entre variables, et de représenter les distributions
+ainsi que la répartition géographique des logements en Californie.
+"""
+
 import logging
 
 import numpy as np

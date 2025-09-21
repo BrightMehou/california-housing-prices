@@ -1,3 +1,11 @@
+"""
+Suite de tests Pytest pour l’application Streamlit et la fonction `model_prediction`.  
+Elle couvre :  
+- les prédictions réussies et les erreurs (exception, HTTP),  
+- l’état initial de l’interface Streamlit,  
+- et la validation d’une prédiction avec des entrées valides.  
+"""
+
 import pytest
 import requests
 from streamlit.testing.v1 import AppTest
