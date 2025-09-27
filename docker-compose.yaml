@@ -7,7 +7,7 @@ services:
     environment:
       - MODEL_NAME=Production-model
       - GIT_PYTHON_REFRESH=quiet
-  interface:
+  ui:
     build:
       context: .
       dockerfile: src/ui/Dockerfile
