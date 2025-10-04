@@ -6,6 +6,7 @@ Le modèle est logué avec MLflow et évalué avec génération d’un explainer
 """
 
 import logging
+from typing import Any
 
 import mlflow
 import mlflow.sklearn
@@ -35,7 +36,7 @@ def train(random_state: int = 42) -> None:
     )
 
     # Paramètres du modèle
-    params = {
+    params: dict[str, Any] = {
         "n_estimators": 150,
         "max_depth": 5,
         "learning_rate": 0.15,
@@ -43,9 +44,9 @@ def train(random_state: int = 42) -> None:
     }
 
     # Configuration MLflow
-    run_name = "Production-model"
-    model_name = "Production-model"
-    explainer_name = "explainer"
+    run_name: str = "Production-model"
+    model_name: str = "Production-model"
+    explainer_name: str = "explainer"
 
     with mlflow.start_run(run_name=run_name):
         mlflow.sklearn.autolog(registered_model_name=model_name)
@@ -53,7 +54,7 @@ def train(random_state: int = 42) -> None:
         model.fit(X_train, y_train)
         logger.info("✅ Entraînement du modèle terminé.")
 
-        model_uri = f"runs:/{mlflow.active_run().info.run_id}/model"
+        model_uri: str = f"runs:/{mlflow.active_run().info.run_id}/model"
 
         # Préparation des données d’évaluation
         eval_data = X_test.copy()
@@ -75,14 +76,10 @@ def train(random_state: int = 42) -> None:
         logger.info(f"🔁 Run ID : {mlflow.active_run().info.run_id}")
 
 
-def main():
+if __name__ == "__main__":
     """
     Point d’entrée du script d’entraînement.
     """
     logger.info("🚀 Démarrage du script d'entraînement...")
     train()
     logger.info("🏁 Script terminé.")
-
-
-if __name__ == "__main__":
-    main()

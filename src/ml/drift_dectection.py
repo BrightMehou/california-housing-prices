@@ -30,9 +30,9 @@ def detect_drift(
         current_data (DataFrame): Données actuelles (ex. données de production).
         report_path (str): Chemin de sauvegarde du rapport HTML.
     """
-    reference: Dataset = Dataset.from_pandas(reference_data)
-    current: Dataset = Dataset.from_pandas(current_data)
-    report: Report = Report([DataDriftPreset()], include_tests=True)
+    reference = Dataset.from_pandas(reference_data)
+    current = Dataset.from_pandas(current_data)
+    report = Report([DataDriftPreset()], include_tests=True)
 
     logger.info("🚦 Début de la détection de dérive...")
     my_eval = report.run(current, reference)
@@ -47,11 +47,11 @@ def main() -> None:
     """
     logger.info("🔍 Chargement du dataset California Housing...")
     data = fetch_california_housing(as_frame=True)
-    df: DataFrame = data["frame"]
+    df = data["frame"]
 
     # Simulation des données
-    train_data: DataFrame = df.sample(frac=0.7, random_state=42)
-    prod_data: DataFrame = df.sample(frac=0.3, random_state=24)
+    train_data = df.sample(frac=0.7, random_state=42)
+    prod_data = df.sample(frac=0.3, random_state=24)
 
     # Ajout de dérive artificielle
     prod_data["MedInc"] *= 1.2

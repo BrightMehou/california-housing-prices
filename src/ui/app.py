@@ -34,7 +34,7 @@ en fonction de plusieurs caractéristiques socio-démographiques et géographiqu
 
 
 # URL du modèle
-model_url = os.getenv("model_url", "http://localhost:8000/predict")
+model_url: str = os.getenv("model_url", "http://localhost:8000/predict")
 
 
 # Fonction de prédiction
@@ -107,7 +107,7 @@ with col2:
 
 bouton = st.button("📈 Prédire")
 if bouton:
-    input_data = {
+    input_data: dict[str, float] = {
         "medinc": medinc,
         "houseage": houseage,
         "averooms": averooms,
@@ -127,7 +127,7 @@ if bouton:
         st.success(prediction_text)
 
     if shap_values:
-        feature_names = [
+        feature_names: list[str] = [
             "MedInc",
             "HouseAge",
             "AveRooms",
@@ -152,7 +152,7 @@ st.markdown("---")
 st.markdown(
     """
 © 2025 - Application développée avec [Streamlit](https://streamlit.io/) | 
-Construite avec **Python**, **Poetry**, **Scikit-learn**, **MLflow**, **FastAPI** et **Docker**.
+Construite avec **Python**, **uv**, **Scikit-learn**, **MLflow**, **FastAPI** et **Docker**.
 """
 )
 

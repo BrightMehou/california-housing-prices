@@ -10,7 +10,7 @@ import pytest
 import requests
 from streamlit.testing.v1 import AppTest
 
-from src.ui.ui import model_prediction
+from src.ui.app import model_prediction
 
 
 # Classe personnalisée pour être la valeur de retour mock
@@ -55,7 +55,7 @@ def test_model_prediction_success(monkeypatch) -> None:
 
     monkeypatch.setattr(requests, "post", mock_post)
 
-    input_data = {
+    input_data: dict[str,float] = {
         "medinc": 5.0,
         "houseage": 15.0,
         "averooms": 6.0,
@@ -125,8 +125,8 @@ def session() -> AppTest:
     Initialise une session de test Streamlit.
     """
     at = AppTest.from_file(
-        "src/ui/ui.py"
-    )  # Nom de votre fichier Streamlit
+        "src/ui/app.py"
+    )  
     at.run(timeout=10)
     return at
 
@@ -148,7 +148,7 @@ def test_initial_state(session) -> None:
     assert len(session.button) == 1
 
     # Vérification des labels des champs number_input
-    expected_labels = [
+    expected_labels: list[str] = [
         "Revenu médian des ménages (en dizaines de milliers de $)",
         "Âge moyen des maisons (en années)",
         "Nombre moyen de pièces par logement",

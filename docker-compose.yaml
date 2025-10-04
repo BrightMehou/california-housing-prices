@@ -1,5 +1,5 @@
 services:
-  fastapi:
+  api:
     build:
       context: .
     ports:
@@ -14,8 +14,8 @@ services:
     ports:
       - "8501:8501"
     depends_on:
-      - fastapi
+      - api
     environment:
-      - model_url=http://fastapi:8000/predict
+      - model_url=http://api:8000/predict
       
   

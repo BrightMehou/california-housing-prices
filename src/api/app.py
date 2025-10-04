@@ -4,6 +4,8 @@ Elle charge le modèle et son explainer SHAP, puis expose des endpoints pour eff
 et interpréter les contributions des variables.
 """
 
+from typing import Any
+
 import mlflow
 import pandas as pd
 from fastapi import FastAPI
@@ -13,7 +15,7 @@ from pydantic import BaseModel
 app = FastAPI(
     title="Prédiction des prix des logements en Californie",
     description="API simple pour prédire les prix des logements en Californie avec SHAP values",
-    version="0.2.0",
+    version="0.3.0",
 )
 
 
@@ -28,7 +30,7 @@ class InputFeatures(BaseModel):
     longitude: float
 
 
-def get_latest_run_id(model_name="Production-model"):
+def get_latest_run_id(model_name: str = "Production-model") -> str:
     """
     Retourne le run_id de la version la plus récente du modèle MLflow spécifié.
 
@@ -46,21 +48,21 @@ def get_latest_run_id(model_name="Production-model"):
     return latest_version.run_id
 
 
-RUN_ID = get_latest_run_id("Production-model")
-MODEL_URI = f"runs:/{RUN_ID}/model"
-EXPLAINER_URI = f"runs:/{RUN_ID}/explainer"
+RUN_ID: str = get_latest_run_id("Production-model")
+MODEL_URI: str = f"runs:/{RUN_ID}/model"
+EXPLAINER_URI: str = f"runs:/{RUN_ID}/explainer"
 
 MODEL = mlflow.pyfunc.load_model(MODEL_URI)
 EXPLAINER = mlflow.pyfunc.load_model(EXPLAINER_URI)
 
 
 @app.get("/")
-async def read_main():
-    return {"msg": "API is running"}
+async def root() -> dict[str, str]:
+    return {"msg": "API de prédiction des prix des logements opérationnelle ✅"}
 
 
 @app.post("/predict")
-def predict(input_data: InputFeatures):
+def predict(input_data: InputFeatures) -> dict[str, list[Any]]:
     """
     Prédit le prix d’un logement en Californie à partir de ses caractéristiques.
 
