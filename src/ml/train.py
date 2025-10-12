@@ -19,38 +19,40 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Configuration MLflow
+RUN_NAME: str = "Production-model"
+MODEL_NAME: str = "Production-model"
+EXPLAINE_NAME: str = "explainer"
 
-def train(random_state: int = 42) -> None:
+RANDOM_STATE: int = 42
+# Chargement des données
+housing = fetch_california_housing(as_frame=True)
+X = housing.data
+y = housing.target
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=RANDOM_STATE
+)
+
+# Paramètres du modèle
+MODEL_PARAMS: dict[str, Any] = {
+    "n_estimators": 150,
+    "max_depth": 5,
+    "learning_rate": 0.15,
+    "random_state": RANDOM_STATE,
+}
+
+
+def train() -> None:
     """
     Entraîne et logue un modèle de régression avec MLflow.
 
     Args:
         random_state (int): Graine aléatoire pour la reproductibilité.
     """
-    # Chargement des données
-    housing = fetch_california_housing(as_frame=True)
-    X = housing.data
-    y = housing.target
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=random_state
-    )
 
-    # Paramètres du modèle
-    params: dict[str, Any] = {
-        "n_estimators": 150,
-        "max_depth": 5,
-        "learning_rate": 0.15,
-        "random_state": random_state,
-    }
-
-    # Configuration MLflow
-    run_name: str = "Production-model"
-    model_name: str = "Production-model"
-    explainer_name: str = "explainer"
-
-    with mlflow.start_run(run_name=run_name):
-        mlflow.sklearn.autolog(registered_model_name=model_name)
-        model = GradientBoostingRegressor(**params)
+    with mlflow.start_run(run_name=RUN_NAME):
+        mlflow.sklearn.autolog(registered_model_name=MODEL_NAME)
+        model = GradientBoostingRegressor(**MODEL_PARAMS)
         model.fit(X_train, y_train)
         logger.info("✅ Entraînement du modèle terminé.")
 
@@ -68,7 +70,7 @@ def train(random_state: int = 42) -> None:
             evaluators="default",
             evaluator_config={
                 "log_explainer": True,
-                "explainer_artifact_path": explainer_name,
+                "explainer_artifact_path": EXPLAINE_NAME,
                 "explainer_type": "permutation",
             },
         )

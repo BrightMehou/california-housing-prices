@@ -18,14 +18,10 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-dev
 
 # Copier le code source après installation des dépendances
-COPY src/ml /app/src/ml
-COPY src/api /app/src/api
+COPY src/ /app/src/
 
 # Exposer le port
 EXPOSE 8000
 
 # Entrypoint
 ENTRYPOINT []
-
-# Commande par défaut
-CMD python src/ml/train.py && uvicorn 'src.api.app:app' --host=0.0.0.0 --port=8000
