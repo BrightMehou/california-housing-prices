@@ -1,4 +1,4 @@
-name: Python CI with Poetry
+name: Python CI
 
 on:
   push:

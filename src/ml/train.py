@@ -25,7 +25,7 @@ MODEL_NAME: str = "Production-model"
 EXPLAINE_NAME: str = "explainer"
 
 RANDOM_STATE: int = 42
-# Chargement des données
+
 housing = fetch_california_housing(as_frame=True)
 X = housing.data
 y = housing.target
@@ -58,7 +58,6 @@ def train() -> None:
 
         model_uri: str = f"runs:/{mlflow.active_run().info.run_id}/model"
 
-        # Préparation des données d’évaluation
         eval_data = X_test.copy()
         eval_data["target"] = y_test
 

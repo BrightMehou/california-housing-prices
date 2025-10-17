@@ -40,7 +40,7 @@ def detect_drift(
     logger.info(f"📄 Rapport de dérive sauvegardé dans {report_path}")
 
 
-def main() -> None:
+if __name__ == "__main__":
     """
     Point d’entrée du script de détection de dérive.
     Simule les données de référence et actuelles, puis lance l’analyse.
@@ -60,7 +60,3 @@ def main() -> None:
     # Lancement de la détection
     detect_drift(train_data, prod_data, report_path="data/data_drift_report.html")
     logger.info("✅ Script terminé.")
-
-
-if __name__ == "__main__":
-    main()

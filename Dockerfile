@@ -19,6 +19,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 # Copier le code source après installation des dépendances
 COPY src/ /app/src/
+COPY data/ /app/data/
 
 # Exposer le port
 EXPOSE 8000
