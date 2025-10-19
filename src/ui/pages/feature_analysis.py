@@ -18,17 +18,15 @@ Elle répond à la question : *Comment les prédictions changent-elles en foncti
 """
 )
 
-# Répertoire contenant les images
-image_dir = "data/feature_analysis"
-pattern = os.path.join(image_dir, "*.png")
+partial_dependence_pattern = os.path.join(
+    "data", "feature_analysis", "partial_dependence_*.png"
+)
+partial_dependence_images = sorted(glob.glob(partial_dependence_pattern))
 
-# Récupération et tri des fichiers
-image_files = sorted(glob.glob(pattern))
-
-if not image_files:
-    st.warning(f"⚠️ Aucune image trouvée dans le dossier '{image_dir}'.")
+if not partial_dependence_images:
+    st.warning(f"⚠️ Aucune image trouvée pour le motif : {partial_dependence_pattern}")
 else:
-    for filepath in image_files:
+    for filepath in partial_dependence_images:
         image = Image.open(filepath)
         filename = os.path.basename(filepath).replace(".png", "")
         st.subheader(f"📈 {filename}")
@@ -86,7 +84,7 @@ De manière similaire à la latitude, la valeur des biens diminue lorsque la lon
 
 st.write(
     """
-# Analuse locale avec les valeurs SHAP
+# Analyse locale avec les valeurs SHAP
          
 Définition :
 Les valeurs SHAP mesurent la contribution exacte de chaque caractéristique à la prédiction d'une observation spécifique, en utilisant les valeurs de Shapley issues de la théorie des jeux.
@@ -104,5 +102,64 @@ Pour une observation où la prédiction est élevée, les valeurs SHAP vous diro
 Avantages :
 Interactions : Les valeurs SHAP prennent en compte les interactions entre caractéristiques.
 Applicables aux explications locales et globales.
+"""
+)
+
+filepath_beeswarm = os.path.join("data", "feature_analysis", "beeswarm_plot.png")
+image_beeswarm = Image.open(filepath_beeswarm)
+st.subheader("📈 beeswarm")
+st.image(image, width="stretch")
+st.divider()
+
+scatter_plot_pattern = os.path.join("data", "feature_analysis", "scatter_plot_*.png")
+scatter_plot_images = sorted(glob.glob(scatter_plot_pattern))
+
+if not scatter_plot_images:
+    st.warning(f"⚠️ Aucune image trouvée pour le motif : {scatter_plot_pattern}")
+else:
+    for filepath in scatter_plot_images:
+        image = Image.open(filepath)
+        filename = os.path.basename(filepath).replace(".png", "")
+        st.subheader(f"📈 {filename}")
+        st.image(image, width="stretch")
+        st.divider()
+
+st.markdown(
+    """
+Le graphique des valeurs SHAP présenté ci-dessus confirme les résultats obtenus lors de l'analyse des dépendances partielles. 
+Les variables qui influencent le plus les prédictions du modèle sont **Latitude**, **Longitude**, et **MedInc**.
+Ces caractéristiques jouent un rôle clé dans la détermination des valeurs médianes des maisons. 
+Ensuite, des variables comme **AveOccup** et **AveRooms** exercent une influence moindre, mais non négligeable.
+Enfin, **HouseAge**, **Population**, et **AveBedrms** ont une contribution très faible, indiquant qu'elles impactent peu les prédictions du modèle.
+"""
+)
+
+filepath_bar = os.path.join("data", "feature_analysis", "bar_plot.png")
+image_bar = Image.open(filepath_bar)
+st.subheader("📈 bar_plot")
+st.image(image_bar, width="stretch")
+st.divider()
+
+st.markdown(
+    """
+Ce graphique montre qu’en moyenne, les caractéristiques **Latitude**, **Longitude**, **MedInc**, **AveOccup**, **AveRooms**, **HouseAge**, **Population**, et **AveBedrms**
+contribuent respectivement, en valeur absolue, à hauteur de **0,86**, **0,75**, **0,35**, **0,19**, **0,11**, **0,05**, **0,03**, et **0,03** à la prédiction du modèle par rapport à la baseline.
+Ces résultats confirment l’importance relative des variables identifiées précédemment, avec une influence majeure des trois premières caractéristiques (**Latitude**, **Longitude**, et **MedInc**) et une contribution plus marginale des autres.
+"""
+)
+
+filepath_bar_abs_max = os.path.join("data", "feature_analysis", "bar_plot_abs_max.png")
+image_bar_abs_max = Image.open(filepath_bar_abs_max)
+st.subheader("📈 bar_plot_abs_max")
+st.image(image_bar_abs_max, width="stretch")
+st.divider()
+
+st.markdown(
+    """
+Ce graphique illustre que les caractéristiques **Longitude**, **MedInc**, **AveRooms**, **AveOccup**, **HouseAge**, **Population**, et **AveBedrms**
+contribuent, en valeur absolue, respectivement à hauteur de **2.22, 2.19, 2.13, 1.75, 1.25, 0.84, 0.84, 0.77, et 0.51** à la prédiction du modèle par rapport à la baseline.
+* **Longitude**, **MedInc** et **AveRooms** affichent les contributions les plus élevées, toutes proches de **2**. Cela montre que la **localisation géographique** (longitude) et le **revenu médian des ménages**, ainsi que le **nombre moyen de pièces par logement**, jouent un rôle déterminant dans les prédictions du modèle.
+* **AveOccup** et **HouseAge** présentent des contributions intermédiaires : leur influence est significative mais reste secondaire comparée aux variables majeures. Cela traduit par exemple l’importance de la densité d’occupation et de l’ancienneté des logements dans la variation des prix.
+* **Population**, **AveBedrms** et les autres variables étudiées affichent des contributions plus faibles, bien que non négligeables. Leur impact est plus diffus, venant compléter l’effet des variables principales.
 """
 )

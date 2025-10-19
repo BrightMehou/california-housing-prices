@@ -9,6 +9,7 @@ Voici la structure du projet :
 ```
 ├───.github/
 │   └───workflows/        # Fichiers pour l'intégration continue
+├───data                  # Data
 ├───notebooks/            # Notebooks Jupyter pour l'exploration et les analyses préliminaires
 ├───src/                  # Code source du projet
 │   ├───api/              # API construite avec FastAPI (fichier app.py)
