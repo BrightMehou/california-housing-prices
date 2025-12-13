@@ -1635,7 +1635,7 @@ dev = [
 requires-dist = [
     { name = "evidently", specifier = ">=0.7.17" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.117.1" },
-    { name = "mlflow", specifier = ">=3.4.0" },
+    { name = "mlflow", specifier = ">=3.7.0" },
     { name = "scikit-learn", specifier = ">=1.7.2" },
     { name = "shap", specifier = ">=0.48.0" },
     { name = "streamlit", specifier = ">=1.49.1" },
