@@ -61,7 +61,7 @@ def train() -> None:
         eval_data = X_test.copy()
         eval_data["target"] = y_test
 
-        result = mlflow.evaluate(
+        result = mlflow.models.evaluate(
             model=model_uri,
             data=eval_data,
             targets="target",
