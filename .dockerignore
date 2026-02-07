@@ -33,3 +33,6 @@
 **/mlruns
 LICENSE
 README.md
+
+**/.ruff_cache
+**/.github

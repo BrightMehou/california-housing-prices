@@ -15,9 +15,12 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "black>=25.9.0",
     "ipykernel>=6.30.1",
     "nbformat>=5.10.4",
     "pytest>=8.4.2",
     "ruff>=0.13.1",
 ]
+
+[tool.ruff.lint]
+select = ["E","F","I"]
+ignore = ["E501"]
