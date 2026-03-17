@@ -1,10 +1,10 @@
 """
-Suite de tests Pytest pour l’API FastAPI de prédiction des prix des logements.  
+Suite de tests Pytest pour l’API FastAPI de prédiction des prix des logements.
 Elle vérifie :
-- l’accessibilité de l’API,  
-- la validité des prédictions,  
-- la gestion des champs manquants,  
-- et le traitement des types de données invalides.  
+- l’accessibilité de l’API,
+- la validité des prédictions,
+- la gestion des champs manquants,
+- et le traitement des types de données invalides.
 """
 
 from typing import Any
@@ -38,7 +38,9 @@ def test_api_is_running(client: TestClient) -> None:
     """
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == {"msg": "API de prédiction des prix des logements opérationnelle ✅"}
+    assert response.json() == {
+        "msg": "API de prédiction des prix des logements opérationnelle ✅"
+    }
 
 
 # Test pour vérifier une prédiction valide
@@ -91,7 +93,7 @@ def test_missing_field(client: TestClient, missing_field: str) -> None:
     - Utilise la paramétrisation pour tester différents champs manquants.
     - Vérifie que le code de statut est 422 (Unprocessable Entity).
     """
-    payload: dict[str,float] = {
+    payload: dict[str, float] = {
         "longitude": -122.23,
         "latitude": 37.88,
         "housing_median_age": 41.0,
@@ -114,7 +116,7 @@ def test_invalid_data_type(client: TestClient) -> None:
     - Envoie une requête POST avec un payload JSON contenant des types incorrects.
     - Vérifie que le code de statut est 422 (Unprocessable Entity).
     """
-    payload: dict[str,Any]= {
+    payload: dict[str, Any] = {
         "longitude": "not_a_float",
         "latitude": 37.88,
         "housing_median_age": 41.0,

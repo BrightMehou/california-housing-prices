@@ -1,9 +1,9 @@
 """
-Suite de tests Pytest pour l’application Streamlit et la fonction `model_prediction`.  
-Elle couvre :  
-- les prédictions réussies et les erreurs (exception, HTTP),  
-- l’état initial de l’interface Streamlit,  
-- et la validation d’une prédiction avec des entrées valides.  
+Suite de tests Pytest pour l’application Streamlit et la fonction `model_prediction`.
+Elle couvre :
+- les prédictions réussies et les erreurs (exception, HTTP),
+- l’état initial de l’interface Streamlit,
+- et la validation d’une prédiction avec des entrées valides.
 """
 
 import pytest
@@ -26,7 +26,10 @@ class MockResponseSuccess:
         """
         Retourne une réponse simulée avec une prédiction.
         """
-        return {"prediction": [3.0], "shap_values": [[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]]}
+        return {
+            "prediction": [3.0],
+            "shap_values": [[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]],
+        }
 
 
 class MockResponseError:
@@ -36,6 +39,7 @@ class MockResponseError:
 
     status_code = 500
     text = "Erreur"
+
     @staticmethod
     def json():
         """
@@ -55,7 +59,7 @@ def test_model_prediction_success(monkeypatch) -> None:
 
     monkeypatch.setattr(requests, "post", mock_post)
 
-    input_data: dict[str,float] = {
+    input_data: dict[str, float] = {
         "medinc": 5.0,
         "houseage": 15.0,
         "averooms": 6.0,
@@ -124,9 +128,7 @@ def session() -> AppTest:
     """
     Initialise une session de test Streamlit.
     """
-    at = AppTest.from_file(
-        "src/ui/app.py"
-    )  
+    at = AppTest.from_file("src/ui/app.py")
     at.run(timeout=10)
     return at
 
@@ -186,9 +188,13 @@ def test_valid_input(session: AppTest, monkeypatch) -> None:
     session.number_input[0].set_value(5.0).run()  # Revenu médian des ménages
     session.number_input[1].set_value(15.0).run()  # Âge moyen des maisons
     session.number_input[2].set_value(6.0).run()  # Nombre moyen de pièces par logement
-    session.number_input[3].set_value(1.0).run()  # Nombre moyen de chambres par logement
+    session.number_input[3].set_value(
+        1.0
+    ).run()  # Nombre moyen de chambres par logement
     session.number_input[4].set_value(800.0).run()  # Population de la région
-    session.number_input[5].set_value(3.0).run()  # Nombre moyen d'occupants par logement
+    session.number_input[5].set_value(
+        3.0
+    ).run()  # Nombre moyen d'occupants par logement
     session.number_input[6].set_value(37.0).run()  # Latitude de la région
     session.number_input[7].set_value(-122.0).run()  # Longitude de la région
 
@@ -196,4 +202,7 @@ def test_valid_input(session: AppTest, monkeypatch) -> None:
     session.button[0].click().run()
 
     # Vérification du message de résultat
-    assert session.success[0].value == "💰 Le prix prédit pour le logement est : **300,000 $**."
+    assert (
+        session.success[0].value
+        == "💰 Le prix prédit pour le logement est : **300,000 $**."
+    )

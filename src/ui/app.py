@@ -70,7 +70,7 @@ def model_prediction(input: dict):
     logger.info(f"Réponse reçue du modèle : {prediction} avec SHAP {shap_values}")
 
     text_output = (
-        f"💰 Le prix prédit pour le logement est : **{prediction*(10**5):,.0f} $**."
+        f"💰 Le prix prédit pour le logement est : **{prediction * (10**5):,.0f} $**."
     )
     return text_output, shap_values
 
