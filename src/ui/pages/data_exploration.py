@@ -100,7 +100,7 @@ fig = ff.create_annotated_heatmap(
 )
 fig.update_layout(title="Matrice de corrélation linéaire", height=700, width=700)
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, width='stretch')
 
 st.markdown(
     """
@@ -181,7 +181,7 @@ Ces insights soulignent l'importance de l'ingénierie des caractéristiques, de 
 st.subheader("📊 Distribution des caractéristiques")
 feature = st.selectbox("Choisissez une variable :", data.columns)
 fig = px.histogram(data, x=feature, nbins=30, title=f"Histogramme de {feature}")
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, width='stretch')
 
 
 st.markdown(
@@ -227,7 +227,7 @@ fig = px.scatter_mapbox(
     mapbox_style="open-street-map",
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, width='stretch')
 
 st.markdown(
     """
@@ -259,7 +259,7 @@ else:
 
 st.plotly_chart(
     fig,
-    use_container_width=True,
+    width='stretch',
 )
 
 st.markdown(
