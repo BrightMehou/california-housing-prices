@@ -63,3 +63,10 @@ Voici la structure du projet :
 
 3. Accéder à l'interface:
    - URL : `http://localhost:8501`
+
+
+4. Seulement pour les dev du projet
+   ```bash
+   uv run pre-commit install
+   uv run pre-commit run --all-files
+   ```
