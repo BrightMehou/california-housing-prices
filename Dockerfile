@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.13-slim
 
 # Copie des binaires UV
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
