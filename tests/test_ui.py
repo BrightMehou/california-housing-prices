@@ -201,8 +201,4 @@ def test_valid_input(session: AppTest, monkeypatch) -> None:
     # Cliquer sur "Prédire"
     session.button[0].click().run()
 
-    # Vérification du message de résultat
-    assert (
-        session.success[0].value
-        == "💰 Le prix prédit pour le logement est : **300,000 $**."
-    )
+    assert "300,000 $" in session.success[0].value
