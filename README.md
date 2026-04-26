@@ -10,15 +10,15 @@ Voici la structure du projet :
 ├───.github/
 │   └───workflows/        # Fichiers pour l'intégration continue
 ├───data                  # Data
-├───notebooks/            # Notebooks Jupyter pour l'exploration et les analyses préliminaires
+├───notebooks/            # Notebooks Jupyter pour les expérimentations
 ├───src/                  # Code source du projet
-│   ├───api/              # API construite avec FastAPI (fichier app.py)
-│   ├───interface/        # Interface utilisateur Streamlit (fichier interface.py)
-│   ├───ml/               # Scripts pour l'entraînement et l'évaluation des modèles (fichier train.py)
+│   ├───api/              # AppFastAPI
+│   ├───ui/               # Interface utilisateur Streamlit
+│   ├───ml/               # Scripts pour l'entraînement et l'évaluation des modèles
 ├───tests/                # Tests unitaires et d'intégration
 ├───Dockerfile            # Fichier Docker pour containeriser l'API
 ├───docker-compose.yml    # Fichier Compose pour orchestrer les services
-└───pyproject.toml        # Fichier de configuration pour Poetry
+└───pyproject.toml        # Fichier de configuration pour uv et Ruff
 ```
 
 ## Fonctionnalités
@@ -31,7 +31,6 @@ Voici la structure du projet :
    - Permet aux utilisateurs de saisir les caractéristiques d'un logement et de recevoir une prédiction de prix en temps réel.
 
 3. **Notebooks Jupyter** :
-   - **Analyse_des_features** : Utilisation de SHAP pour analyser l'importance des caractéristiques dans les prédictions.
    - **Experimentations** : Création et évaluation de plusieurs modèles, avec journalisation des résultats dans MLflow pour 
 
 4. **Scripts de Machine Learning** :
@@ -39,11 +38,6 @@ Voici la structure du projet :
    - Entraînement des modèles avec des données de logement en Californie.
    - Évaluation des modèles à l'aide de métriques telles que le MSE, MAE et R².
    - Journalisation des modèles et des résultats avec MLflow.
-
-5. **Docker et Orchestration** :
-   - Un fichier Dockerfile permet de containeriser l'API.
-   - Un autre fichier Dockerfile permet de containeriser l'interface utilisateur.
-   - Le fichier docker-compose.yml facilite l'orchestration des services (API, MLflow, etc.).
 
 ## 📥 Installation et utilisation
 
