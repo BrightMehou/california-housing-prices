@@ -18,8 +18,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Configuration de la page
-st.set_page_config(page_title="Prédiction du prix des logements", layout="wide")
+st.set_page_config(
+    page_title="California housing prices", page_icon="🏠", layout="wide"
+)
 
 logger.info("Démarrage de l'application Streamlit.")
 
